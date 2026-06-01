@@ -1,6 +1,5 @@
-/* 	COP 3502C Assignment 4
+/* 	
 	This program is written by: Christopher Font
-	Quality Assurance by the Poopsmith
 */
 
 #include <stdio.h>
@@ -26,9 +25,7 @@ treeNameNode * dynamicallyCreateTreeNameNode(char * s) {
     treeNameNode * tmp = (treeNameNode *) malloc(sizeof(treeNameNode));
 
     strcpy(tmp->treeName, s);
-
     tmp->left = tmp->right = NULL;
-
     tmp->theTree = NULL;
 
     return tmp;
@@ -55,9 +52,7 @@ treeNameNode * loadTreeNameNodeFromFile (FILE * fp, int n) {
 
     while (n > 0) {
         fscanf(fp, "%s\n", s);
-
         root = buildNameTree(root, s);
-
         n--;
     }
 
@@ -107,11 +102,8 @@ void printItemNodes(itemNode * node) {
         return;
 
     printItemNodes(node->right);
-
     FILE * ofp = fopen(OUTFILE, "a");
-
     fprintf(ofp, "%s ", node->name);
-
     fclose(ofp);
 
     printItemNodes(node->left);
@@ -122,21 +114,13 @@ void printTreeNameNodes(treeNameNode * node) {
         return;
 
     printTreeNameNodes(node->right);
-
     FILE * ofp = fopen(OUTFILE, "a");
-
     fprintf(ofp, "===%s===\n", node->treeName);
-
     fclose(ofp);
-
     printItemNodes(node->theTree);
-
     ofp = fopen(OUTFILE, "a");
-
     fprintf(ofp, "\n");
-
     fclose(ofp);
-
     printTreeNameNodes(node->left);
 }
 
@@ -145,11 +129,8 @@ void printTreeNameNodesOnly(treeNameNode * node) {
         return;
 
     printTreeNameNodesOnly(node->right);
-
     FILE * ofp = fopen(OUTFILE, "a");
-
     fprintf(ofp, "%s ", node->treeName);
-
     fclose(ofp);
     printTreeNameNodesOnly(node->left);
 }
@@ -160,7 +141,6 @@ void freeTreeNameNodes(treeNameNode * node) {
 
     freeTreeNameNodes(node->left);
     freeTreeNameNodes(node->right);
-
     freeItemNodes(node->theTree);
 
     free(node);
@@ -173,21 +153,15 @@ void loadFirstLineFromFile (FILE * fp, int * n, int * i, int * q) {
 void printFirstLine(int n , int i, int q) {
 
     FILE * ofp = fopen(OUTFILE, "a");
-
     fprintf(ofp, "%d\t%d\t%d\n", n, i, q);
-
     fclose(ofp);
 }
 
 itemNode * dynamicallyCreateItemNode(char * s, int count) {
     itemNode * tmp = (itemNode *) malloc(sizeof(itemNode));
-
     strcpy(tmp->name, s);
-
     tmp->count = count;
-
     tmp->left = tmp->right = NULL;
-
     return tmp;
 }
 
@@ -207,21 +181,15 @@ itemNode * insertItemNode(itemNode * node, char * key, int count) {
 
 void loadItemsFromFile(FILE * fp, treeNameNode * root, int i) {
     char s[MAXLEN];
-
     treeNameNode * tmp;
-
     int tmp2 = 0;
 
     while (i > 0) {
         fscanf(fp, "%s", s);
-
         tmp = searchForTreeNodeUsingKey(root, s);
-
         fscanf(fp, "%s", s);
         fscanf(fp, "%d\n", &tmp2);
-
         tmp->theTree = insertItemNode(tmp->theTree, s, tmp2);
-
         i--;
     }
 }
@@ -243,34 +211,25 @@ int countItemsBefore(itemNode * node, char * key) {
 
 void search(treeNameNode * root, char * treeKey, char * itemKey) {
     treeNameNode * tmpTreeNameNode = searchForTreeNodeUsingKey(root, treeKey);
-
+	
     if (tmpTreeNameNode == NULL) {
-
         FILE * ofp = fopen(OUTFILE, "a");
-
         fprintf(ofp, "%s does not exist\n", treeKey);
-
         fclose(ofp);
         return;
     }
 
     itemNode * tmpItemNameNode = searchForItemNodeUsingKey(tmpTreeNameNode->theTree, itemKey);
-
-    if (tmpItemNameNode == NULL) {
-
+    
+	if (tmpItemNameNode == NULL) {
         FILE * ofp = fopen(OUTFILE, "a");
-
         fprintf(ofp, "%s not found in %s\n", itemKey, treeKey);
-
         fclose(ofp);
         return;
     }
 
-
     FILE * ofp = fopen(OUTFILE, "a");
-
     fprintf(ofp, "%d %s found in %s\n", tmpItemNameNode->count, itemKey, treeKey);
-
     fclose(ofp);
 }
 
@@ -278,11 +237,8 @@ void item_before(treeNameNode * root, char * treeKey, char * itemKey) {
     treeNameNode * tmpTreeNameNode = searchForTreeNodeUsingKey(root, treeKey);
 
     if (tmpTreeNameNode == NULL) {
-
         FILE * ofp = fopen(OUTFILE, "a");
-
         fprintf(ofp, "%s does not exist\n", treeKey);
-
         fclose(ofp);
         return;
     }
@@ -290,22 +246,15 @@ void item_before(treeNameNode * root, char * treeKey, char * itemKey) {
     itemNode * tmpItemNameNode = searchForItemNodeUsingKey(tmpTreeNameNode->theTree, itemKey);
 
     if (tmpItemNameNode == NULL) {
-
         FILE * ofp = fopen(OUTFILE, "a");
-
         fprintf(ofp, "%s not found in %s\n", itemKey, treeKey);
-
         fclose(ofp);
         return;
     }
 
     int i = countItemsBefore(tmpTreeNameNode->theTree, itemKey);
-
-
     FILE * ofp = fopen(OUTFILE, "a");
-
     fprintf(ofp, "item before %s: %d\n", itemKey, i);
-
     fclose(ofp);
 }
 
@@ -320,17 +269,14 @@ int claculateDiffrence(int x, int y) {
 }
 
 int height_balance(itemNode * node) {
-    //CASE 1 Node is NULL
     if (node == NULL) return -1;
 
     int lh = height_balance(node->left);
     int rh = height_balance(node->right);
-
+	
     int diffrence = claculateDiffrence(lh, rh);
-
-   return 1 + findMaxValue(lh, rh);
-
-
+	
+	return 1 + findMaxValue(lh, rh);
 }
 
 void heightBalanceStarter(treeNameNode * root, char * treeKey) {
@@ -339,11 +285,8 @@ void heightBalanceStarter(treeNameNode * root, char * treeKey) {
     treeNameNode * tmpTreeNameNode = searchForTreeNodeUsingKey(root, treeKey);
 
     if (tmpTreeNameNode == NULL) {
-
         FILE * ofp = fopen(OUTFILE, "a");
-
         fprintf(ofp, "%s does not exist\n", treeKey);
-
         fclose(ofp);
         return;
     }
@@ -352,16 +295,10 @@ void heightBalanceStarter(treeNameNode * root, char * treeKey) {
     // But this works so...
     int rightHeight = height_balance(tmpTreeNameNode->theTree->left);
     int leftHeight = height_balance(tmpTreeNameNode->theTree->right);
-
     int difference = claculateDiffrence(leftHeight, rightHeight);
-
     int isBalanced = difference > 1? 0: 1;
-
-
     FILE * ofp = fopen(OUTFILE, "a");
-
     fprintf(ofp, "%s: left height %d, right height %d, difference %d, %s\n", treeKey, leftHeight, rightHeight, difference, balancedAmount[isBalanced]);
-
     fclose(ofp);
 }
 
@@ -377,7 +314,6 @@ int count(itemNode * node) {
 
 itemNode * copyToItemNode(itemNode * one, itemNode * two) {
     strcpy(one->name, two->name);
-
     one->count = two->count;
 }
 
@@ -411,7 +347,6 @@ itemNode * deleteItemNode(itemNode * node, char * key) {
         copyToItemNode(node, tmp);
         node->right = deleteItemNode(node->right, tmp->name);
     }
-
     return node;
 }
 
@@ -457,22 +392,16 @@ treeNameNode * deleteTreeNameNode(treeNameNode * node, char * key) {
 
 void reduce(itemNode * root, char * key, int amount) {
     itemNode * tmp = searchForItemNodeUsingKey(root, key);
-
+	
     if (tmp->count > amount) {
         tmp->count = tmp->count - amount;
-
         FILE * ofp = fopen(OUTFILE, "a");
-
         fprintf(ofp, "%s reduced\n", key);
-
         fclose(ofp);
     } else {
         tmp = deleteItemNode(tmp, key);
-
         FILE * ofp = fopen(OUTFILE, "a");
-
         fprintf(ofp, "%s deleted\n", key);
-
         fclose(ofp);
     }
     return;
@@ -480,7 +409,6 @@ void reduce(itemNode * root, char * key, int amount) {
 
 void loadCommands(FILE * fp, treeNameNode * root, int q) {
     FILE * ofp;
-
     char s1[MAXLEN];
     char s2[MAXLEN];
 
@@ -488,11 +416,8 @@ void loadCommands(FILE * fp, treeNameNode * root, int q) {
         strcpy(s1, "");
         strcpy(s2, "");
         ofp = fopen(OUTFILE, "a");
-
         fscanf(fp, "%s", s1);
-
-//        printf("%d:\t%s\n", q, s1);
-
+		
         if (strcmp(s1, "search") == 0) {
             fscanf(fp, "%s", s1);
             fscanf(fp, "%s\n", s2);
@@ -511,7 +436,6 @@ void loadCommands(FILE * fp, treeNameNode * root, int q) {
             fscanf(fp, "%s", s1);
             fscanf(fp, "%s\n", s2);
             searchForTreeNodeUsingKey(root, s1)->theTree = deleteItemNode(searchForTreeNodeUsingKey(root, s1)->theTree, s2);
-
             fprintf(ofp, "%s deleted from %s\n", s2, s1);
         } else if (strcmp(s1, "delete_name") == 0) {
             fscanf(fp, "%s\n", s1);
@@ -524,7 +448,6 @@ void loadCommands(FILE * fp, treeNameNode * root, int q) {
             fscanf(fp, "%d", &tmp);
             reduce(searchForTreeNodeUsingKey(root, s1)->theTree, s2, tmp);
         }
-
         fclose(ofp);
         q--;
     }
@@ -534,40 +457,24 @@ int main (void) {
     int n;
     int i;
     int q;
-
     FILE * fp = fopen("in.txt", "r");
-
+	
     loadFirstLineFromFile(fp, &n, &i, &q);
-
     treeNameNode * treeNameRoot = loadTreeNameNodeFromFile(fp, n);
 
+	
     FILE * ofp = fopen(OUTFILE, "w");
-
     fclose(ofp);
-
-
-    printTreeNameNodesOnly(treeNameRoot);
-
-    ofp = fopen(OUTFILE, "a");
-
+    
+	printTreeNameNodesOnly(treeNameRoot);
+    
+	ofp = fopen(OUTFILE, "a");
     fprintf(ofp, "\n");
-
     fclose(ofp);
-
     loadItemsFromFile(fp, treeNameRoot, i);
-
     printTreeNameNodes(treeNameRoot);
-
     loadCommands(fp, treeNameRoot, q);
-
     freeTreeNameNodes(treeNameRoot);
-
     fclose(fp);
-
     return 0;
 }
-
-/*
-    TODO:
-    SCREAM I'm DONE!
-*/
